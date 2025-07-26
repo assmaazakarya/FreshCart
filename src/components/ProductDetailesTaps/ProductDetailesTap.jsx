@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import FirstTab from "../FirstTab/FirstTab";
 import SecondTab from '../SecondTab/SecondTab'
-import ThirdTab from "../thirdTab/ThirdTab";
+import ThirdTab from "../ThirdTab/ThirdTab";
 
 
 export default function ProductDetailesTap({ productDiscription }) {
