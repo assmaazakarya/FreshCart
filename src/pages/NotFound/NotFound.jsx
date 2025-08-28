@@ -1,13 +1,12 @@
 import { faComment, faEnvelope, faHome, faPhone, faSearch, faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useContext } from 'react'
 import { Link } from 'react-router'
 import Subscribe from '../../components/Subscribe/Subscribe'
-import { categoriesContext } from '../../Context/AllCategories.Context'
+import useCategories from '../../hooks/useCategories'
 
 export default function NotFound() {
   
-    const {categories , isLoading} = useContext(categoriesContext)
+    const {categories , isLoading} = useCategories()
     let category = []
     if(!isLoading){
       category = categories?.filter((categ)=>{

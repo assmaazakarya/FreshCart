@@ -2,7 +2,6 @@ import { apiClient } from "../axiosInstance/api-client";
 
 export async function addToCart({id}){
 try {
-    
   const options={
     url :'/cart',
     method:"POST",
@@ -45,7 +44,6 @@ export async function removeCartItem(id) {
     throw error
 }   
 }
-
 export async function updateCartItems({id,count}) {
   try {
     

@@ -1,12 +1,13 @@
-import { useContext } from "react"
-import { BrandsContext } from "../../Context/AllBrands.Context"
-import Loading from "../../components/Loading/Loading";
 import { Link } from "react-router";
 import Subscribe from "../../components/Subscribe/Subscribe";
+import useBrands from "../../hooks/useBrands";
+import BrandsSkeleton from "../../components/Skeleton/BrandsSkeleton";
 
 export default function Brands() {
 
-const {brands , isLoading} = useContext(BrandsContext)
+const {brands , isLoading} = useBrands()
+
+if(isLoading) {return <BrandsSkeleton/>} 
 
   return <>
    <section className="pt-10 space-y-8 text-center">
@@ -21,9 +22,7 @@ const {brands , isLoading} = useContext(BrandsContext)
     </div>
     <div className="bg-gray-50 py-10">
       <div className="container grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 *:rounded-md *:shadow ">
-        {
-        isLoading ? <Loading /> :
-        brands?.data.map((brand)=>{
+        { brands?.map((brand)=>{
           return <div className="overflow-hidden bg-white" key={brand._id}>
             <img src={brand.image} className="h-2/3 mx-auto" alt="" />
             <div className="border-t border-gray-100 flex justify-between h-1/3 items-center px-5">

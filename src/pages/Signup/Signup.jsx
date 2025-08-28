@@ -25,7 +25,6 @@ const [isErrorExist,setIsErrorExist] = useState(null)
 async function handleSginup(values){
     try {
   const response = await sendDataToSignup(values)
-  console.log(response);
   if(response.success){
     toast.success("You created an account successfully")
     setTimeout(()=>{
@@ -33,7 +32,6 @@ async function handleSginup(values){
     },3000)
   }
     } catch (error) {
-      console.log(error);
       setIsErrorExist(error.message)
     }
   

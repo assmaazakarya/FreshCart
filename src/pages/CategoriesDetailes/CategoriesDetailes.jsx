@@ -1,9 +1,5 @@
-import { useContext, useEffect } from "react"
 import { Link, useParams } from "react-router"
-import { categoriesContext } from "../../Context/AllCategories.Context"
-import Loading from "../../components/Loading/Loading"
 import ProductCard from "../../components/ProductCard/ProductCard"
-import { subCategoriesContext } from "../../Context/SubCategories.Context"
 import Subscribe from "../../components/Subscribe/Subscribe"
 import {Swiper,SwiperSlide} from "swiper/react";
 import {Navigation} from 'swiper/modules'
@@ -11,25 +7,22 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons"
+import useCategoryById from "../../hooks/useCategoryById"
+import useSubCategoriesOfCategory from "../../hooks/useSubCategoriesOfCategory"
+import CategoriesDetailesSkeleton from "../../components/Skeleton/CategoriesDetailesSkeleton";
 
 
 
 export default function CategoriesDetailes() {
 
-  const {id} = useParams()
-  const category = id
-  const {  categoryById , isLoading , getCategoryById } = useContext (categoriesContext)
-  const {handleFetchingAllSubcategoriesOfCategory , subCategoriesOfCategory} = useContext(subCategoriesContext)
-  useEffect(()=>{
-    getCategoryById({category})
-    handleFetchingAllSubcategoriesOfCategory({id}) 
-  }
-,[id])
-
-if(isLoading) return <Loading/>
+    const {id} = useParams()
+  const { categoryById , isLoading  } = useCategoryById(id)
+  const { subCategoriesOfCategory} = useSubCategoriesOfCategory(id)
+if(isLoading) return <CategoriesDetailesSkeleton/>
   
 return (
     <main className="bg-gray-50">
+      <title>{categoryById[0].category.name}</title>
       <div className="py-15 container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {
       categoryById?.map((category)=>{

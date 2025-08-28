@@ -1,6 +1,3 @@
-import { useContext } from "react"
-import { categoriesContext } from "../../Context/AllCategories.Context"
-import Loading from "../../components/Loading/Loading"
 import BrandsCategoriesCard from "../../components/BrandsCategorirsCard/BrandsCategoriesCard"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faAngleLeft, faAngleRight, faUser } from "@fortawesome/free-solid-svg-icons"
@@ -9,24 +6,25 @@ import {Navigation} from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import Subscribe from "../../components/Subscribe/Subscribe"
-import { subCategoriesContext } from "../../Context/SubCategories.Context"
 import { Link } from "react-router"
+import useCategories from "../../hooks/useCategories"
+import useSubcategories from "../../hooks/useSubCategories"
+import CategoriesSkeleton from "../../components/Skeleton/CategoriesSkeleton";
 
 
 
 
 export default function Categories() {
 
-  const {categories , isLoading} =useContext(categoriesContext)
-  const {subCategories } = useContext(subCategoriesContext)
+  const {categories , isLoading} =useCategories()
+  const {subCategories} = useSubcategories()
 
 
-  if(isLoading) return <Loading />
-  
+  if(isLoading) return <CategoriesSkeleton />
   
 return<>
-    
      <section className="pt-15 bg-gray-50">
+      <title>Categories</title>
       <div className="container">
         <div className="space-y-9">
           <div className='flex items-center justify-between'>

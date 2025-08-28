@@ -1,23 +1,26 @@
 import { faMinus, faPlus , faTrash } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import RatingStars from "../RatingStars/RatingStars"
-import { useContext, useState } from "react"
-import { CartContext } from "../../Context/Cart.Context"
 import { Link } from "react-router"
+import useRemoveItemFromCart from "../../hooks/useRemoveItemFromCart";
+import useUpdateCartItemsQuantitiy from "../../hooks/useUpdateCartItemsQuantitiy"
+import { useEffect, useState } from "react";
+
 
 export default function CartItem({productInfo}) {
 
   const [isUpdating , setIsUpdating] = useState(false)
-  const { handleRemovingCartItem , handleUpdatingQuantity } = useContext(CartContext) 
   const {price , count  , product} = productInfo
   const {id} = product
 
-  async function handleUpdating({id,count}){
-    setIsUpdating(true)
-    await handleUpdatingQuantity({id, count})
-     setIsUpdating(false)
-   }
-
+  const {mutate : removeMutate} = useRemoveItemFromCart()
+  const {mutate : updateMutate , isSuccess} = useUpdateCartItemsQuantitiy()
+   
+  useEffect(() => {
+    if (isSuccess) {
+      setIsUpdating(false);
+    }
+  }, [isSuccess]);
   return <>
    <div className={`${isUpdating && 'opacity-50'} middle p-5 grid grid-cols-2`}>
                         <div className="flex items-center gap-4">
@@ -41,7 +44,8 @@ export default function CartItem({productInfo}) {
                           <div className="flex *:border-gray-200">
                             <div className="border p-2 rounded-tl-lg rounded-bl-lg">
                               <button onClick={()=>{
-                                handleUpdating({id , count: count-1})
+                                updateMutate({id , count: count-1})
+                                setIsUpdating(true)
                               }}>
                             <FontAwesomeIcon className="text-xs" icon={faMinus}/>
                            </button>
@@ -51,16 +55,15 @@ export default function CartItem({productInfo}) {
                               </div>
                               <div className="border p-2 rounded-tr-lg rounded-br-lg">
                                 <button onClick={()=>{
-                                  handleUpdating({id , count: count+1})
+                                  updateMutate({id , count: count+1})
+                                  setIsUpdating(true)
                                 }}>
                            <FontAwesomeIcon className="text-xs" icon={faPlus}/>
                             </button>
                               </div>
                           </div>
                            <span className="font-semibold"> {price * count}  EGP</span>
-                           <FontAwesomeIcon onClick={()=>{
-                            handleRemovingCartItem(product.id)
-                           }} icon={faTrash} className="text-red-600 cursor-pointer" />
+                           <FontAwesomeIcon onClick={()=>{ removeMutate(product.id)}} icon={faTrash} className="text-red-600 cursor-pointer" />
                         </div>
    </div>                   
   </>

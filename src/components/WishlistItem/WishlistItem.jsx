@@ -1,25 +1,16 @@
-import { faMinus, faPlus , faTrash } from "@fortawesome/free-solid-svg-icons"
+import { faTrash } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import RatingStars from "../RatingStars/RatingStars"
-import { useContext, useEffect, useState } from "react"
-import { CartContext } from "../../Context/Cart.Context"
 import { Link } from "react-router"
-import { WishlistContext } from "../../Context/Wishlist.Context"
+import useAddToCart from "../../hooks/useAddToCart"
+import useRemoveItemFromWishlist from "../../hooks/useRemoveItemFromWishlist"
 
 export default function WishlistItem({productInfo}) {
  
 const {price , id  , imageCover , ratingsAverage , title , category} = productInfo
-const {handleRemovingItemFromWishlist} = useContext(WishlistContext)
-const {handleAddingtoCart} = useContext(CartContext)
 
-
-async function removeItem(id) {
- await handleRemovingItemFromWishlist(id) 
-}
-
-async function addToCart(id) {
-  await handleAddingtoCart(id)
-}
+const {mutate : addMutate} = useAddToCart()
+const {mutate:removeItemFromWishlistMutate} = useRemoveItemFromWishlist()
 
   return <>
    <div className={`border-b border-gray-200  middle p-5 grid grid-cols-2`}>
@@ -43,11 +34,11 @@ async function addToCart(id) {
                         </div>
                         <div className=" flex gap-8 items-center justify-end">
                             <button onClick={()=>{
-                              addToCart(id)
+                              addMutate({id})
                             }} className="btn bg-primary-600 text-white hover:bg-primary-500">
                                 Add to Cart
                             </button>
-                           <FontAwesomeIcon onClick={()=>{removeItem(id)}} icon={faTrash} className="text-gray-400 cursor-pointer" />
+                           <FontAwesomeIcon onClick={()=>{removeItemFromWishlistMutate(id)}} icon={faTrash} className="text-gray-400 cursor-pointer" />
                         </div>
    </div>                   
   </>

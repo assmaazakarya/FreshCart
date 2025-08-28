@@ -1,29 +1,27 @@
 import { faShieldHalved,faTruckFast } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import CartItem from "../../components/CartItem/CartItem"
-import { useContext, useEffect } from "react"
-import { CartContext } from "../../Context/Cart.Context"
-import Loading from "../../components/Loading/Loading"
 import { Link } from "react-router"
 import emptyCart from '../../assets/empty-cart.svg'
+import useGetCartItmes from "../../hooks/useGetCartItems"
+import CartSkeleton from "../../components/Skeleton/CartSkeleton"
 
 
 
 export default function Cart() {
  
-const { cartInfo , isLoading } = useContext(CartContext)
-
+const { cartInfo , isLoading } = useGetCartItmes()
 
 
 if(isLoading){
-  return <Loading />
+  return <CartSkeleton />
  }
-
  const {data , numOfCartItems , cartId} = cartInfo
  const {products , totalCartPrice} = data
  
 
  return  <section className="py-10 bg-gray-50">
+               <title>Shopping Cart</title>
                 <div className="container grid grid-cols-1 gap-y-6 lg:grid-cols-3 lg:gap-6">                 
                  <div className="h-fit shopping-items col-span-2 rounded-sm border border-gray-200 bg-white">
                     <div className="p-5 top border-b border-gray-300/50 space-y-1.5 ">

@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react'
-import { getAllProducts } from '../../services/ProductService/Product-sercive'
-import Loading from '../Loading/Loading'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
 import {Swiper,SwiperSlide} from "swiper/react";
@@ -8,40 +5,15 @@ import {Navigation} from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import ProductCard from '../ProductCard/ProductCard'
+import useRelatedProducts from '../../hooks/useRelatedProducts'
+import RelatedProductsSkeleton from '../Skeleton/RelatedProductsSkeleton';
 
 
 export default function RelatedProducts({category}) {
 
   const {_id} = category
-  const [productsByCategory ,setProductsByCategory ] = useState(null)
-  const [isLoading , setIsLoading] = useState(true)
-  const [isError , setIsError] = useState(false)
-
-
-  async function getProductByCategory() {
-    setIsLoading(true)
-   try {
-     const response = await getAllProducts({category : _id})
-     if(response.success){
-      setIsLoading(false)
-      setProductsByCategory(response.data.data)
-     }
-   } catch (error) {
-      setIsLoading(false)
-      setIsError(true)
-   }
-  }
-     
-  useEffect(()=>{
-     getProductByCategory()
-  },[])
-   
-
-
-  if(isLoading) return <Loading />
-
-
-
+  const {productsByCategory , isLoading} = useRelatedProducts(_id)
+  if(isLoading) return <RelatedProductsSkeleton />
   return (
       <div className="container">
 
@@ -78,7 +50,6 @@ export default function RelatedProducts({category}) {
           })
        }
   </Swiper>
-      
     </div>
       </div>
   )

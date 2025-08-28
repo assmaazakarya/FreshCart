@@ -2,18 +2,16 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router";
 import ProductCard from "../ProductCard/ProductCard";
-import Loading from "../Loading/Loading";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { countDown } from "../../utlis/countDown";
-import { productContext } from "../../Context/AllProducts.Context";
+import useProducts from "../../hooks/useProducts";
+import HomeDealsSkeleton from "../Skeleton/HomeDealsSkeleton";
 
 export default function HomeDeals() {
 
-const {products , isLoading , isError , error } = useContext(productContext)
+const {products , isLoading } = useProducts()
 
 const [leftTime , setLeftTime] = useState({ hours :0, minutes: 0 ,second: 0})
-
-
 
 useEffect(()=>{  
 let setIntervalId = setInterval(()=>{
@@ -24,7 +22,7 @@ return ()=>{ clearInterval(setIntervalId) }
 },[])
 
 if(isLoading){
-    return <Loading />
+    return <HomeDealsSkeleton />
 }
 
 const deals = products.filter((product)=>{ return product.priceAfterDiscount}).slice(0,5)

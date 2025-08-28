@@ -4,11 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link, useNavigate } from 'react-router'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
-import { useContext } from 'react'
-import { CartContext } from '../../Context/Cart.Context'
 import { CreateCashOrder } from '../../services/orderService/order-service'
-import Loading from '../../components/Loading/Loading'
 import { toast } from 'react-toastify'
+import useGetCartItmes from '../../hooks/useGetCartItems'
+import CheckoutSkeleton from '../../components/Skeleton/CheckoutSkeleton'
 
 export default function Checkout() {
 
@@ -16,7 +15,6 @@ const phoneRegex = /^01[0125][0-9]{8}$/
 const navigate = useNavigate()
 
 async function handleCreatingOrder(values){
-  console.log(values);
   try {
     const response = await CreateCashOrder({paymentMethod:values.paymentMethod , cartId , shippingAddress:values.shippingAddress})  
     if(response.success){
@@ -27,13 +25,6 @@ async function handleCreatingOrder(values){
         } , 3000)
       }
       toast.success("Your order has been created successfully")
-      setCartInfo({
-        numOfCartItems:0,
-        data:{
-          products:[],
-          totalCartPrice:0
-        }
-      })
       setTimeout(()=>{  
          navigate('/account')
       } , 3000)
@@ -71,17 +62,16 @@ function handlePaymentChange(e) {
 }
 
 
-const {cartInfo , isLoading , setCartInfo}= useContext(CartContext)
+const {cartInfo , isLoading}= useGetCartItmes()
 
-if(isLoading) return <Loading />
+if(isLoading) return <CheckoutSkeleton />
 
-const {cartId , numOfCartItems , data} = cartInfo
+const {cartId  , data} = cartInfo
 const {totalCartPrice , products} = data
- 
-
  
 return <>
   <section className='bg-gray-50'>
+    <title>Checkout</title>
     <div className="container max-w-6xl p-6">
       <form onSubmit={formik.handleSubmit} >
         <h1 className='text-2xl font-semibold mb-6'>CheckOut</h1>

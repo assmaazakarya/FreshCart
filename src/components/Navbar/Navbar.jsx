@@ -1,38 +1,19 @@
-import {
-  faAddressCard,
-  faEnvelope,
-  faHeart,
-  faUser,
-} from '@fortawesome/free-regular-svg-icons';
-import {
-  faAngleDown,
-  faBabyCarriage,
-  faBars,
-  faBolt,
-  faCartShopping,
-  faEllipsis,
-  faPerson,
-  faPersonDress,
-  faPhone,
-  faRightFromBracket,
-  faSpinner,
-  faSuitcaseMedical,
-  faUserPlus,
-  faXmark,
-} from '@fortawesome/free-solid-svg-icons';
+import {faAddressCard,faEnvelope,faHeart,faUser,} from '@fortawesome/free-regular-svg-icons';
+import {faAngleDown,faBabyCarriage,faBars,faBolt,faCartShopping,faEllipsis,faPerson,faPersonDress,faPhone,faRightFromBracket,faSpinner,faSuitcaseMedical,faUserPlus,faWifi,faXmark} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, NavLink } from 'react-router';
 import Logo from '../../assets/freshcart-logo.svg';
 import { useContext, useState } from 'react';
 import { AuthContext } from '../../Context/Auth.Context';
-import { CartContext } from '../../Context/Cart.Context';
-import { categoriesContext } from '../../Context/AllCategories.Context';
+import useCategories from '../../hooks/useCategories';
+import { useOnline } from '../../hooks/useOnlineStatus';
+import useGetCartItmes from '../../hooks/useGetCartItems';
 
 export default function Navbar() {
   const { logOut, token } = useContext(AuthContext);
-  const { cartInfo, isLoading } = useContext(CartContext);
-
-  const { categories } = useContext(categoriesContext);
+  const { cartInfo } = useGetCartItmes()
+    
+  const { categories , isLoading } = useCategories()
   let category = [];
   if (!isLoading) {
     category = categories?.filter(categ => {
@@ -46,12 +27,15 @@ export default function Navbar() {
         return categ;
     });
   }
-
+   
+  
+  
   const [isMenuOpened, setIsMenuOpened] = useState(false);
   function toggleMenu() {
     setIsMenuOpened(!isMenuOpened);
   }
 
+  const isOnline = useOnline() 
   return (
     <>
       <header className="text-gray-800">
@@ -67,6 +51,13 @@ export default function Navbar() {
                 <FontAwesomeIcon icon={faEnvelope} />
                 <a href="mailto:support@freshcart.com">support@freshcart.com</a>
               </li>
+               {
+              isOnline && 
+              <li className='text-primary-500'>
+                <FontAwesomeIcon icon={faWifi} />
+                <span>Online</span>
+              </li>
+             }
             </ul>
             <ul>
               <li>

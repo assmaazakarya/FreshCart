@@ -1,21 +1,23 @@
 import { faShieldHalved,faTruckFast } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { useContext } from "react"
-import Loading from "../../components/Loading/Loading"
 import { Link } from "react-router"
 import emptyCart from '../../assets/empty-cart.svg'
 import WishlistItem from "../../components/WishlistItem/WishlistItem"
-import { WishlistContext } from "../../Context/Wishlist.Context"
+import useGetWishlistItems from "../../hooks/useGetWishlistItems"
+import WishlistSkeleton from "../../components/Skeleton/WishlistSkeleton"
 
 
 export default function Wishlist() {
    
- const {wishlistInfo , isLoading } = useContext(WishlistContext)
-  
- if(isLoading) return <Loading />
+ const {wishlistInfo , isLoading} = useGetWishlistItems()
 
+ console.log(wishlistInfo);
+ 
+
+ if(isLoading) return <WishlistSkeleton />
 
   return   <section className="py-10 bg-gray-50">
+                <title>My Wishlist</title>
                 <div className="container grid grid-cols-1 gap-y-6 lg:grid-cols-3 lg:gap-10">                 
                  <div className="h-fit shopping-items col-span-2 rounded-sm border border-gray-200 bg-white">
                     <div className="p-5 top border-b border-gray-300/50 space-y-1.5 ">

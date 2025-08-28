@@ -1,5 +1,5 @@
 import {Swiper,SwiperSlide} from "swiper/react";
-import {Pagination ,Navigation} from 'swiper/modules'
+import {Pagination ,Navigation , Autoplay } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
@@ -9,12 +9,16 @@ import SliderImg from '../../assets/home-slider-1.png'
 export default function Slider() {
   return <> 
       <Swiper 
-      modules={[Pagination,Navigation]} 
+      modules={[Pagination,Navigation ,Autoplay ]} 
       navigation={true} 
       pagination={{clickable:true}} 
       slidesPerView={1} 
-      spaceBetween={5} 
-      loop={true}>
+      spaceBetween={5}
+      speed={400} 
+      loop={true}
+      autoplay={{
+           delay: 3000,
+           disableOnInteraction: false }}>
         <SwiperSlide>
           <div style={{backgroundImage:`url(${SliderImg})`,backgroundRepeat:'no-repeat',backgroundSize:"cover" , backgroundPosition:"center"}}>
           <div className="overlay py-27 bg-gradient-to-r from-primary-600/80 to-primary-600/40  ">

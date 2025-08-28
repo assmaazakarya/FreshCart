@@ -1,29 +1,43 @@
 import { faEye, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { faCodeCompare, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, Links } from "react-router";
+import { Link } from "react-router";
 import { calcDiscount } from '../../utlis/discount';
 import RatingStars from '../RatingStars/RatingStars';
-import { useContext, useEffect, useState } from "react";
-import { CartContext } from "../../Context/Cart.Context";
-import { WishlistContext } from "../../Context/Wishlist.Context";
+import {useEffect, useState } from "react";
+import useAddToCart from "../../hooks/useAddToCart";
+import useAddToWishlist from "../../hooks/useAddToWishlist";
 
 
 export default function ProductCard({product}) {
 
-const [isInWishlist , setIsInWishlist] = useState(false)
-const { handleAddingtoWishlist , wishlistIds } = useContext(WishlistContext)
-
-const {handleAddingtoCart} = useContext(CartContext)
-  const {id,title,imageCover,category,ratingsAverage,ratingsQuantity,price,priceAfterDiscount
+const {id,title,imageCover,category,ratingsAverage,ratingsQuantity,price,priceAfterDiscount
  } = product
 
+ const {mutate:addToCartmutate} = useAddToCart()
+ const {mutate:addToWishlistMutate } = useAddToWishlist()
 
+
+const [isInWishlist , setIsInWishlist] = useState(false)
+const [wishlistIDs , setWishListIDs] = useState(JSON.parse(localStorage.getItem('wishlistIDs')) || [])
+
+ 
   useEffect(()=>{
-    setIsInWishlist(false)
-    setIsInWishlist(wishlistIds?.data?.includes(id))
-  },[])
-  
+    setIsInWishlist(wishlistIDs.includes(id))
+  },[ wishlistIDs , id])
+
+
+const handleWishlist = (id) => {
+  addToWishlistMutate(id, {
+    onSuccess: (data) => {
+      const updatedIDs = data.data.data; 
+      localStorage.setItem("wishlistIDs", JSON.stringify(updatedIDs));
+      setWishListIDs(updatedIDs);
+    },
+  });
+};
+
+
 return <>
 
   <div className="bg-white shadow-md overflow-hidden rounded-lg card relative space-y-3">
@@ -53,16 +67,15 @@ return <>
                 priceAfterDiscount ? (<del className="text-gray-500 text-nowrap">{price} EGP</del>):''
               }
              </div>
-             <button onClick={()=>{
-              handleAddingtoCart(id)
-             }} className="btn shadow-md hover:shadow-lg hover:bg-primary-700 p-0 rounded-full size-8 flex items-center justify-center bg-primary-600 text-white">
+             <button onClick={()=>{addToCartmutate({id})}} 
+                 className="btn shadow-md hover:shadow-lg hover:bg-primary-700 p-0 rounded-full size-8 flex items-center justify-center bg-primary-600 text-white">
               <FontAwesomeIcon icon={faPlus}/>
              </button>
             </div>
           </div>
            <div className="*:text-xl actions flex flex-col gap-3 absolute top-4 right-2">
             <button onClick={()=>{
-              handleAddingtoWishlist(id)
+              handleWishlist(id)
             }}>
               <FontAwesomeIcon className={`${isInWishlist ?'text-red-600':'text-gray-500'}  hover:text-primary-500  transition-colors duration-200`} icon={faHeart}/>
             </button>

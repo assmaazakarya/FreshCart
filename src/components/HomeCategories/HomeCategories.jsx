@@ -1,16 +1,15 @@
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from 'react-router'
-import { useContext,} from 'react'
-import Loading from '../Loading/Loading'
-import { categoriesContext } from '../../Context/AllCategories.Context'
+import useCategories from '../../hooks/useCategories'
+import HomeCategoriesSkeleton from '../Skeleton/HomeCategoriesSkeleton'
 
 export default function HomeCategories() {
   
-const {categories , isLoading , isError , error} = useContext(categoriesContext)
+const {categories , isLoading , isError , error} = useCategories()
 
 if(isLoading){
-    return <Loading />
+    return <HomeCategoriesSkeleton />
 }
 
   return (
@@ -39,7 +38,7 @@ if(isLoading){
         </div>
         </Link> 
 
-        }) :<Loading/>
+        }) :<HomeCategoriesSkeleton/>
       }  
 
 

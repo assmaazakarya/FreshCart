@@ -29,7 +29,7 @@ const [green4 , setGreen4] = useState(false)
 const [green5 , setGreen5] = useState(false)
 
 const navigate = useNavigate()
-const setTimeoutId = null 
+let setTimeoutId = null 
 async function handleForget(vlaues){
   let res =  await handleResetPassword(vlaues)
   setTimeoutId = setTimeout(() => {

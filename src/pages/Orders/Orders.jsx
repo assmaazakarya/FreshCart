@@ -1,12 +1,11 @@
 import { faArrowRightRotate, faCreditCard, faEye } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from 'react-router'
-import empty from '../../assets/empty-cart.svg'
 import {jwtDecode} from "jwt-decode";
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../Context/Auth.Context';
 import { getUserOrders } from '../../services/orderService/order-service';
-import Loading from '../../components/Loading/Loading';
+import OrdersSkeleton from '../../components/Skeleton/OrdersSkeleton';
 
 
 export default function Orders() {
@@ -33,16 +32,16 @@ useEffect(()=>{
 handleFetchingOrders(id)
 },[])
 
-if(isLoading) return <Loading />
+if(isLoading) return <OrdersSkeleton />
 
-
-  return <>
+return <>
      <section className='space-y-4'>
+      <title>My Orders</title>
       <h1 className='text-2xl font-semibold'>My Orders</h1>
       <div>
         {
           orders.map((order)=>{
-            return <div className='ordre-card mt-3 shadow-sm border border-gray-200 rounded-lg'>
+            return <div key={order.id} className='ordre-card mt-3 shadow-sm border border-gray-200 rounded-lg'>
           <div className="top flex p-4 justify-between items-center bg-gray-50 border-b border-gray-200">
             <div className='right space-y-2'>
               <h3 className='font-semibold text-lg'>
@@ -70,7 +69,7 @@ if(isLoading) return <Loading />
             <div className='pe-2 border-gray-300 w-30 overflow-auto *:size-12 *:rounded-lg flex items-center justify-between gap-3'>
             {
               order.cartItems.map((cartItem)=>{
-                  return <img src={cartItem.product.imageCover} className='object-cover' alt="" />
+                  return <img key={cartItem.product.id} src={cartItem.product.imageCover} className='object-cover' alt="" />
               })
             }  
             </div>

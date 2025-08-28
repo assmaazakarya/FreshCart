@@ -24,7 +24,7 @@ const formik = useFormik({
   onSubmit:handleForget,
   validationSchema:schema
 })
-const setTimeOitId = null
+let setTimeOitId = null
 
 async function handleForget(values){
   await handleForgetPassword(values.email)

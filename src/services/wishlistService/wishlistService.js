@@ -1,8 +1,7 @@
 import { apiClient } from "../axiosInstance/api-client";
 
 export async function addToWishlist({id}){
-try {
-    
+try {    
   const options={
     url :'/wishlist',
     method:"POST",

@@ -15,18 +15,13 @@ import Layout from './pages/Layout/Layout';
 import Account from './pages/Account/Account';
 import CategoriesDetailes from './pages/CategoriesDetailes/CategoriesDetailes';
 import { ToastContainer } from 'react-toastify';
-import ProductProvider from './Context/AllProducts.Context';
-import CategoriesProvider from './Context/AllCategories.Context';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import AuthProvider from './Context/Auth.Context';
-import CartProvider from './Context/Cart.Context';
-import SubCategoriesProvider from './Context/SubCategories.Context';
 import VerifyResetCode from './pages/VerifyResetCode/VerifyResetCode';
 import ResetPassword from './pages/ResetPassword/ResetPassword';
-import WishlistProvider from './Context/Wishlist.Context';
-import BrandsProvider from './Context/AllBrands.Context';
 import AccountDetails from './pages/AccountDeatils/AccountDetails';
-
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 function App() {
   const router = createBrowserRouter([
@@ -138,28 +133,23 @@ function App() {
     },
   ]);
 
+ const queryClient = new QueryClient({
+  defaultOptions:
+  {
+    queries:{
+      staleTime : 5000,
+      gcTime : 10000
+    }}})
+
   return (
     <>
-      <AuthProvider>
-        <CartProvider>
-          <WishlistProvider>
-           <CategoriesProvider>
-            <SubCategoriesProvider>
-             <BrandsProvider>
-              <ProductProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
                 <RouterProvider router={router}></RouterProvider>
-                <ToastContainer
-                  position="top-right"
-                  closeButton={false}
-                  autoClose={3000}
-                />
-              </ProductProvider>
-             </BrandsProvider>
-            </SubCategoriesProvider>
-          </CategoriesProvider>
-          </WishlistProvider>
-        </CartProvider>
-      </AuthProvider>
+                <ToastContainer position="top-right" closeButton={true} autoClose={2000}/>
+        </AuthProvider>
+       <ReactQueryDevtools />
+      </QueryClientProvider>
     </>
   );
 }

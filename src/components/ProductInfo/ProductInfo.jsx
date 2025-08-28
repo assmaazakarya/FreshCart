@@ -1,43 +1,33 @@
 import { faHeart } from "@fortawesome/free-regular-svg-icons"
-import { faArrowLeftRotate, faCaretRight, faCartShopping, faMinus, faPlus, faShare, faShareNodes, faStar, faTruck, faTruckFast } from "@fortawesome/free-solid-svg-icons"
+import { faArrowLeftRotate, faCartShopping, faMinus, faPlus, faShareNodes,faTruckFast } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import RatingStars from "../RatingStars/RatingStars";
 import { calcDiscount } from "../../utlis/discount";
 import ReactImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css"
-import { CartContext } from "../../Context/Cart.Context";
-import { useContext } from "react";
 import { Link } from "react-router";
-
-
+import useGetCartItmes from "../../hooks/useGetCartItems";
+import useAddToCart from "../../hooks/useAddToCart";
+import useRemoveItemFromCart from "../../hooks/useRemoveItemFromCart";
+import useUpdateCartItemsQuantitiy from "../../hooks/useUpdateCartItemsQuantitiy";
 export default function ProductInfo({productDetails}) {
   
   const {title ,ratingsAverage ,ratingsQuantity , description , price , priceAfterDiscount , images ,quantity , id} = productDetails
-  const {
-    handleAddingtoCart , 
-    cartInfo , 
-    handleRemovingCartItem , 
-    handleUpdatingQuantity} = useContext(CartContext)
+  
+  const { cartInfo }  = useGetCartItmes()
+  const {mutate : addMutate} = useAddToCart()
+  const {mutate : removeMutate} = useRemoveItemFromCart()
+  const {mutate : updateMutate} = useUpdateCartItemsQuantitiy()
   
   let count = 0
-  
   let productsArr=cartInfo?.data?.products;
-  
   const productId = productsArr?.filter((product)=>{
     if(product?.product?.id === id){
       count =  product.count
       return (product?.product?.id);
     }
   })
-
-   async function updateQuantity({id,count}) {
-     await handleUpdatingQuantity({id,count}) 
-   }
    
-   
-
-
-
   return   <section className="py-15">
                 <div className="container grid grid-cols-1 gap-y-6 lg:grid-cols-3 lg:gap-6">
                   <div className="slider col-span-1 h-fit bg-white shadow-md rounded-lg overflow-hidden ">
@@ -87,13 +77,13 @@ export default function ProductInfo({productDetails}) {
                         <div className="flex flex-col mt-3 md:mt-0 md:flex-row gap-3 items-center">
                           <div className="*:text-gray-500 border border-gray-300 rounded-sm space-x-6 px-4 py-1.5 ">
                          <button onClick={()=>{
-                                updateQuantity({id , count: count - 1})
+                                updateMutate({id , count: count - 1})
                               }}>
                         <FontAwesomeIcon icon={faMinus}/>
                       </button>
                       <span>{count}</span>
                       <button  onClick={()=>{
-                                updateQuantity({id , count: count + 1})
+                                updateMutate({id , count: count + 1})
                               }}>
                         <FontAwesomeIcon icon={faPlus} />
                       </button>
@@ -106,7 +96,7 @@ export default function ProductInfo({productDetails}) {
                            productId?.length > 0 ?
                            <>
                             <button 
-                         onClick={()=>{ handleRemovingCartItem(id)}}
+                         onClick={()=>{ removeMutate(id)}}
                          className="hover:bg-red-500 hover:border-red-500 space-x-2 btn bg-red-600 text-white border border-red-600">
                           <FontAwesomeIcon icon={faCartShopping} />
                           <span>Remove from Cart</span>
@@ -115,7 +105,7 @@ export default function ProductInfo({productDetails}) {
                            :
                            <>
                            <button 
-                         onClick={()=>{handleAddingtoCart(id)}}
+                         onClick={()=>{addMutate({id})}}
                          className="hover:bg-primary-500 hover:border-primary-500 space-x-2 btn bg-primary-600 text-white border border-primary-600">
                           <FontAwesomeIcon icon={faCartShopping} />
                           <span>Add to Cart</span>
